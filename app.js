@@ -11,6 +11,8 @@ GAME RULES:
 
 var scores, roundScore, activePlayer, gamePlaying;
 
+var prevDice;
+
 
 init();
 
@@ -41,6 +43,21 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         //3. Update the round score IF the rolled number was NOT a 1
         if (dice !== 1)
         {
+            //check if this is the first dice
+            if (prevDice === 0)
+                prevDice = dice;
+            else if ( (prevDice === 6) && (dice === 6) )    //check if this is the second dice and if this dice and the previous one are both 6
+            {
+                roundScore = 0;
+                scores[activePlayer] = 0;
+
+                //Update the UI
+                document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+
+                //next player
+                nextPlayer();
+            }
+
             //Add score
             roundScore += dice;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
@@ -119,6 +136,9 @@ function init() {
     roundScore = 0;
 
     gamePlaying = true;
+
+    //v2 rules
+    prevDice = 0;
 
     document.querySelector('.dice').style.display = 'none';
 
